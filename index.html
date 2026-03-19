@@ -447,15 +447,16 @@
         const maxCount = Math.max(...stages.map(s => stageCounts[s.name]||0), 1);
         const colors = ['#3b82f6','#6366f1','#8b5cf6','#a855f7','#d946ef','#ec4899','#f43f5e','#ef4444','#f59e0b','#22c55e','#10b981','#06b6d4','#0ea5e9','#64748b','#ef4444','#dc2626','#991b1b'];
 
+        const topCount = stageCounts[stages[0]?.name] || 1;
         let h = '';
         stages.forEach((s, i) => {
             const count = stageCounts[s.name] || 0;
             const pct = (count/maxCount*100).toFixed(0);
-            const conv = i > 0 ? ((count / (stageCounts[stages[i-1].name]||1))*100).toFixed(0) + '%' : '100%';
+            const funnelPct = ((count / topCount) * 100).toFixed(1);
             h += `<div class="funnel-step">
                 <div class="stage-name">${s.name}</div>
                 <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${count}</div></div>
-                <div class="conv">${conv}</div>
+                <div class="conv">${funnelPct}%</div>
             </div>`;
         });
         document.getElementById('funnel-area').innerHTML = h;
