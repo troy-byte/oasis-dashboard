@@ -188,9 +188,9 @@
         <!-- Lead Sources -->
         <div class="section" id="sec-sources">
             <div class="section-header"><h2>Lead Source Performance</h2></div>
-            <table><thead><tr>
-                <th>Source</th><th class="r">Total</th><th class="r">Won</th><th class="r">Lost</th>
-                <th class="r">Revenue</th><th class="r">Avg Deal</th><th>Win Rate</th><th>% of Flow</th>
+            <table class="source-table" style="table-layout:fixed"><thead><tr>
+                <th style="width:180px">Source</th><th class="r" style="width:70px">Total</th><th class="r" style="width:60px">Won</th><th class="r" style="width:60px">Lost</th>
+                <th class="r" style="width:100px">Revenue</th><th class="r" style="width:90px">Avg Deal</th><th style="width:120px">Win Rate</th><th class="r" style="width:80px">% of Leads</th><th class="r" style="width:80px">% of Rev</th>
             </tr></thead><tbody id="source-body"></tbody></table>
         </div>
 
@@ -398,17 +398,19 @@
         }).filter(s => s.total >= 3).sort((a,b) => b.rev - a.rev);
 
         const grandTotal = list.reduce((a,s) => a + s.total, 0) || 1;
+        const grandRev = list.reduce((a,s) => a + s.rev, 0) || 1;
         let h = '';
         list.slice(0,20).forEach(s => {
             const wc = wrColor(s.winRate);
-            const pctOfFlow = ((s.total / grandTotal) * 100).toFixed(1);
-            const bw = Math.max(parseFloat(pctOfFlow) * 1.5, 2);
+            const pctLeads = ((s.total / grandTotal) * 100).toFixed(1);
+            const pctRev = ((s.rev / grandRev) * 100).toFixed(1);
             h += `<tr>
                 <td style="font-weight:600">${s.name}</td><td class="r">${s.total}</td>
                 <td class="r green">${s.won}</td><td class="r red">${s.lost}</td>
                 <td class="r revenue">${fc(s.rev)}</td><td class="r">${fc(s.avgDeal)}</td>
                 <td><div class="wr"><div class="bar"><div class="fill" style="width:${s.winRate}%;background:${wc}"></div></div><div class="pct" style="color:${wc}">${s.winRate}%</div></div></td>
-                <td><div class="source-bar"><div class="bar" style="width:${bw}px"></div><div class="count">${pctOfFlow}%</div></div></td>
+                <td class="r">${pctLeads}%</td>
+                <td class="r">${pctRev > 0 ? pctRev + '%' : '—'}</td>
             </tr>`;
         });
         document.getElementById('source-body').innerHTML = h;
